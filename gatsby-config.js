@@ -1,12 +1,19 @@
 require(`dotenv`).config({
   path: `.env`,
-})
+});
 
-const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
+const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE;
 
 module.exports = {
   siteMetadata: {
-    siteTitleAlt: `Minimal Blog - Gatsby Theme`,
+    siteTitle: `Hetav Desai`,
+    siteHeadline: `Hetav's Blog`,
+    siteTitleAlt: `Home | Hetav Desai`,
+    siteDescription: `Hetav's Blog`,
+    siteUrl: `https://desaihetav-blog.netlify.com/`,
+    siteLanguage: `en`,
+    siteImage: `/logo.png`,
+    author: `@desaihetav`,
   },
   plugins: [
     {
@@ -15,22 +22,30 @@ module.exports = {
       options: {
         navigation: [
           {
+            title: `Home`,
+            slug: `/`,
+          },
+          {
             title: `Blog`,
             slug: `/blog`,
           },
+          // {
+          //   title: `About`,
+          //   slug: `/about`,
+          // },
           {
-            title: `About`,
-            slug: `/about`,
+            title: `Tags`,
+            slug: `/tags`,
           },
         ],
         externalLinks: [
           {
             name: `Twitter`,
-            url: `https://twitter.com/lekoarts_de`,
+            url: `https://twitter.com/desaihetav`,
           },
           {
-            name: `Instagram`,
-            url: `https://www.instagram.com/lekoarts.de/`,
+            name: `GitHub`,
+            url: `https://www.instagram.com/desaihetav`,
           },
         ],
       },
@@ -77,4 +92,4 @@ module.exports = {
       },
     },
   ].filter(Boolean),
-}
+};
