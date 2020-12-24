@@ -1,0 +1,102 @@
+---
+title: "Learnings from NotesHD"
+date: 2020-12-20
+description: Things I learnt while creating note taking app in vanillaJS
+tags:
+  - Learnings
+  - vanillaJS
+banner: ./faanmg.png
+---
+
+[NotesHD](https://noteshd.netlify.app) is a simple note taking web app which I created using HTML, CSS and vanillaJS, as a part of [GetYourMentor](https://www.getyourmentor.org/) program and in the process I learnt quite a lot of things. In this blog, I'll share my learnings in two parts – first, the technical concepts that I learnt while developing this app and second, good code practices suggested by [Kushagra Gour](https://twitter.com/chinchang457) during the code review.
+
+## Technical Concepts
+
+In this section, I'm going to share the three major things I learnt/discovered during the development process.
+
+#### 1. contenteditable attribute
+
+In HTML, using attribute `contenteditable="true"` can make non interactive elements like `<div>` editable by the user.
+
+I was initially using `<input>` and `<textarea>` elements for the note title and the note content respectively. Later, while working on the responsiveness of the app, I was able to make the `textarea` responsive using some CSS but struggled a lot to make the `input` element responsive. The problem was that when the width of the viewport reduced, the contents inside the `input` element did not wrap on to multiple lines. That's when I started looking for alternatives to using `input` element and discovered `contenteditable` attribute. I used it with `<div>` and it worked like charm!
+
+#### 2. Using Window localStorage Property
+
+Since working with databases in backend is a bit complex and it takes some time to wrap our head around it, I always used to associate localStorage with databases and had assumed that it must be complex too. But when I had to use localStorage for developing this notes app, I started exploring it and realised that it's fairly simple than the image I had created in my mind. It really is very simple.
+
+localStorage stores data in the form of key-value pairs. The syntax to write data to localStorage is:
+
+```js
+localStorage.setItem(key, value);
+```
+
+Some things to keep in mind while using this syntax is that the key should always be of String datatype and the value can be anything you want.
+
+Anything stored in localStorage can be read using the following syntax:
+
+```js
+var value = localStorage.getItem(key);
+```
+
+That's it. And the beauty of localStorage is that it can store data with no expiry date. The data in localStorage will not be deleted when tab/browser is closed, cache memory of browser is cleared and even when device is rebooted. Yes, you can try this for yourself!!
+
+#### 3. Adding `<script>` tag at correct place in HTML file
+
+The HTML file is executed from top to bottom and hence where in this file do you add the your `<script>` is very important. Usually, the HTML elements are accessed and often their content is updated from the JavaScript file and hence it is a good practice to place `<script>` tag at the end of body. If you place it at the top, the script will try to access DOM nodes, even before they are rendered and hence it'll fail with error.
+
+I had only one JS file in this project as it wasn't too complex and following the usual practice, I had called my script at the end of the body. But I started facing problem when I added theme toggle feature. The logic to fetch the user preference from localStorage and apply it was in the JS file and it is called at the end of body. Now if the user had switched to dark theme, when the app is opened, it would first render all the HTML elements in light mode without knowing the preference of the user. Later when the script runs, it'd apply the user preferred theme. Now if the user had switched to dark theme, it'd show a flash of light mode for a fraction of second and then switch to dark mode. And this was a really bad user experience.
+
+Recently, I had read an article which talked about the same issue caused during SSR (Server Side Rendering). Honestly, I did not understand all the details of the solution discussed in the article to solve this issue in SSR, but I did understand the approach to it. And the approach was to run the logic to handle theme, before a single HTML element was rendered. I quickly realised that it can be achieved by seperating the logic to handle theme in a different JS file and call it at the start of the body. I tried it and it worked exactly as expected!
+
+---
+
+## Good Practices
+
+Listed below are the amazing Good Code practices that I learnt during the code review, a few of which I could have never thought of!
+
+- Use variables with suffix ‘El’ to name elements storing DOM nodes. ‘El’ refers to element.
+
+  - Example: `var inputEl = document.querySelector(“#input”)`
+
+- If some variable is storing the index of something in an array, use suffix ‘Index’ with variable name
+
+  - Example: `var selectedNoteIndex = 0`
+
+- Use separate classes to access an element in CSS and JS. When same class is used to access the element in both CSS and JS, if you rename/remove that class in HTML and CSS file, it’ll break the JS code. Use `js-` prefix in class name to access it from JS file.
+
+  - Example: `<div class=“notes-list js-notes-notes”></div>`
+  - Use `.notes-list{}` to style and `var notesListEl = document.querySelector(“.js-notes-list”)` to access form JS
+
+- Always prefix boolean variables with is, has, should, etc.
+
+  - Example: isLoggedIn, hasPaid, shouldDelete, etc.
+
+- Use positive words for boolean variables.
+
+  - Example: Use isLoggedIn over isNotLoggedIn
+  - Using `if(user.isLoggedIn){}` and `if(!user.isLoggedIn){}` makes more comprehensive than using `if(!user.isNotLoggedIn){}` and `if(user.isNotLoggedIn){}`
+
+- Using `alt` attribute for images is must. It is important for Accessibility and Image SEO.
+
+  - Be as specific as possible while describing the image, but also keep it short and crisp, upto 125 characters. If the image is complex and needs longer description, use `longdesc` attribute.
+  - Use proper keywords to describe the image, but also don't use too many, SEO depends on that.
+  - When using image as a button, it is wise to use proper alt text to describe the action performed by the button. Example: Submit, LogIn, SignUp, etc.
+
+- Using `:focus{ outline: none }` in CSS is **NOT** good for accessibility. If you don't like the default outline, use custom styling to highlight it when focused. Read more about it [here](https://www.a11yproject.com/posts/2013-01-25-never-remove-css-outlines/).
+
+---
+
+## Final Thoughts
+
+Thank you very much for reading this article and if you found it useful, please do share it with your friends or anyone who may find this interesting.
+
+If you like my content, follow me on [Twitter](https://twitter.com/desaihetav) and subscribe to my newsletter so that you don't miss out on updates whenever I post something new.
+
+<iframe
+  src="https://desaihetav.substack.com/embed"
+  width="100%"
+  height="290"
+  style="border:0px solid #EEE; background:#F3F4F6; border-radius: 0.5rem;"
+  frameborder="0"
+  scrolling="no"
+></iframe>
